@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Shield, Check, X, Zap, Download, GitBranch, ArrowRight } from "lucide-react";
+import { executionRoles, monetizationNarrative } from "@/lib/revenue-ops";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: "One-time $29 Architectural Export fee. Generate production-grade specifications for free, pay only when you're ready to ship.",
+  description: "One-time $29 production generation unlock. Generate website concepts for free, pay when you're ready to ship production deliverables.",
 };
 
 const FREE_FEATURES = [
@@ -15,16 +16,17 @@ const FREE_FEATURES = [
   { text: "Live Orchestration Dashboard", included: true },
   { text: "Agent Consensus Visualization", included: true },
   { text: "Specification Preview", included: true },
+  { text: "Production Website Build Package", included: false },
   { text: "Push to GitHub", included: false },
   { text: "Download as .ZIP", included: false },
-  { text: "CSS Token Export", included: false },
 ];
 
 const PREMIUM_FEATURES = [
   { text: "Everything in Free", included: true },
+  { text: "Production Website Build Package", included: true },
   { text: "Push to GitHub", included: true },
   { text: "Download as .ZIP", included: true },
-  { text: "CSS Token Export", included: true },
+  { text: "Cross-Platform Handoff Spec (Web + Mobile)", included: true },
   { text: "Full Component Directives", included: true },
   { text: "Atomic Design Map", included: true },
   { text: "Priority Agent Processing", included: true },
@@ -50,10 +52,10 @@ export default function PricingPage() {
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-            Generate for <span className="text-gradient">Free</span>. Export when <span className="text-gradient">Ready</span>.
+            Generate for <span className="text-gradient">Free</span>. Pay when <span className="text-gradient">Shipping</span>.
           </h1>
           <p className="text-lg text-foreground/50 max-w-2xl mx-auto leading-relaxed">
-            The entire Archon orchestration pipeline is free to use. You only pay when you&apos;re ready to export your production-grade specification.
+            {monetizationNarrative.headline}
           </p>
         </div>
 
@@ -68,7 +70,7 @@ export default function PricingPage() {
                 <span className="text-foreground/30 text-sm">forever</span>
               </div>
               <p className="text-sm text-foreground/40">
-                Full access to intent analysis, psychographic profiling, and specification generation.
+                Full access to intent analysis, psychographic profiling, and website blueprint generation.
               </p>
             </div>
 
@@ -110,7 +112,7 @@ export default function PricingPage() {
                 <span className="text-foreground/30 text-sm">one-time</span>
               </div>
               <p className="text-sm text-foreground/40">
-                Export your complete architectural specification to GitHub or download as a production-ready package.
+                Unlock your production package for web deployment and mobile handoff assets.
               </p>
             </div>
 
@@ -128,8 +130,21 @@ export default function PricingPage() {
               className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-primary font-bold text-sm hover:neon-glow hover:scale-[1.02] transition-all active:scale-95 shadow-lg shadow-primary/25"
             >
               <ArrowRight className="w-4 h-4" />
-              Begin Intake → Export
+              Begin Intake - Generate
             </Link>
+          </div>
+        </div>
+
+        <div className="max-w-4xl mx-auto space-y-4">
+          <h2 className="text-xl font-bold text-center">Roles currently executing revenue</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {executionRoles.map((role) => (
+              <div key={role.id} className="glass rounded-2xl p-5 space-y-3">
+                <h3 className="text-sm font-bold">{role.title}</h3>
+                <p className="text-xs text-foreground/45 leading-relaxed">{role.objective}</p>
+                <p className="text-[10px] uppercase tracking-widest text-primary/70 font-bold">KPI: {role.kpi}</p>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -140,7 +155,7 @@ export default function PricingPage() {
             {[
               { step: "01", title: "Answer 5 Questions", desc: "Our psychographic intake engine extracts your conversion intent, audience friction, and brand identity in minutes." },
               { step: "02", title: "Watch Agents Orchestrate", desc: "Four autonomous Archon agents (Engineer, UX Lead, Psychologist, ToM) debate and converge on your specification in real-time." },
-              { step: "03", title: "Export & Ship", desc: "Pay once, export forever. Push your complete architectural spec to GitHub or download as a deployment-ready .ZIP archive." },
+              { step: "03", title: "Pay & Ship", desc: "Pay once to unlock your production generation package. Push to GitHub or download a deployment-ready .ZIP bundle." },
             ].map(({ step, title, desc }) => (
               <div key={step} className="glass rounded-2xl p-6 space-y-3">
                 <span className="text-xs font-mono font-bold text-primary">{step}</span>
@@ -155,7 +170,7 @@ export default function PricingPage() {
         <div className="flex flex-wrap justify-center gap-8 text-center pt-8 border-t border-white/5">
           {[
             { icon: <Shield className="w-5 h-5" />, label: "Stripe Secure Checkout" },
-            { icon: <Download className="w-5 h-5" />, label: "Instant Export" },
+            { icon: <Download className="w-5 h-5" />, label: "Instant Generation Package" },
             { icon: <GitBranch className="w-5 h-5" />, label: "GitHub Integration" },
           ].map(({ icon, label }) => (
             <div key={label} className="flex items-center gap-2 text-foreground/30 text-xs font-medium">

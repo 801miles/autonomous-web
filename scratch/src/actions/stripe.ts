@@ -1,66 +1,81 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Stripe from "stripe";
-import { prisma } from "@/lib/db";
+import { getOrCreateCurrentUser, logConversionEvent } from "@/lib/entitlements";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_123", {
-  apiVersion: "2026-03-25.dahlia" as any,
-});
+function getStripe() {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error("STRIPE_SECRET_KEY is not set");
+  return new Stripe(key, { apiVersion: "2026-03-25.dahlia" });
+}
 
-export async function createCheckoutSession(intentId: string) {
+export async function createCheckoutSession(intentId: string, channel: "web" | "android" | "ios" = "web") {
   const { userId } = await auth();
 
   if (!userId) {
     redirect("/sign-in");
   }
 
-  // Ensure user exists in our DB
-  let user = await prisma.user.findUnique({
-    where: { clerkUserId: userId },
-  });
+  const stripe = getStripe();
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const user = await getOrCreateCurrentUser();
+  const cookieStore = await cookies();
+  const referralCode = cookieStore.get("archon_ref")?.value ?? "direct";
 
-  if (!user) {
-    const clerkUser = await fetch(`https://api.clerk.dev/v1/users/${userId}`, {
-      headers: { Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}` },
-    }).then((res) => res.json());
-
-    user = await prisma.user.create({
-      data: {
-        clerkUserId: userId,
-        email: clerkUser.email_addresses[0].email_address,
-      },
-    });
-  }
-
-  // If user already paid
+  // Already paid — send to dashboard with success flag
   if (user.hasPaidExport) {
-    return { url: `/dashboard/${intentId}/export` };
+    return { url: `/dashboard?export_success=true` };
   }
 
   // Create Stripe Checkout Session
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     customer_email: user.stripeCustomerId ? undefined : user.email,
-    customer: user.stripeCustomerId ? user.stripeCustomerId : undefined,
+    customer: user.stripeCustomerId ?? undefined,
     line_items: [
       {
         price_data: {
           currency: "usd",
           product_data: {
-            name: "Archon Architectural Export",
-            description: "One-time fee to export your architectural specifications.",
+            name: "Archon Website Generation Package",
+            description: "One-time unlock for production website generation deliverables: GitHub push and .ZIP bundle.",
+            images: [`${appUrl}/opengraph-image`],
           },
-          unit_amount: 2900, // $29.00
+          unit_amount: 2900, // $29.00 USD
         },
         quantity: 1,
       },
     ],
     mode: "payment",
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard/${intentId}?export_success=true`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard/${intentId}?export_cancelled=true`,
+    success_url: `${appUrl}/dashboard?export_success=true`,
+    cancel_url: `${appUrl}/dashboard?export_cancelled=true`,
     client_reference_id: userId,
+    metadata: {
+      intentId,
+      product: "website_generation_package",
+      userDbId: user.id,
+      referralCode,
+      channel,
+    },
+    allow_promotion_codes: true,
+    billing_address_collection: "auto",
+  });
+
+  await logConversionEvent({
+    userId: user.id,
+    eventType: "checkout_started",
+    eventSource: "dashboard_export_cta",
+    metadata: JSON.stringify({
+      intentId,
+      stripeSessionId: session.id,
+      amountCents: 2900,
+      referralCode,
+      channel,
+    }),
+    amountCents: 2900,
   });
 
   return { url: session.url };

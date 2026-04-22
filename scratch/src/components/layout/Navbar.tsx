@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth, UserButton } from "@clerk/nextjs";
-import { Shield, Zap, LayoutDashboard, GitBranch, Menu, Home, X, DollarSign } from "lucide-react";
+import { Shield, Zap, LayoutDashboard, GitBranch, Menu, Home, X, DollarSign, BarChart3, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -13,6 +13,8 @@ const NAV_LINKS = [
   { href: "/intake", icon: <Zap className="w-4 h-4" />, label: "Intake" },
   { href: "/dashboard", icon: <LayoutDashboard className="w-4 h-4" />, label: "Dashboard" },
   { href: "/pricing", icon: <DollarSign className="w-4 h-4" />, label: "Pricing" },
+  { href: "/mobile", icon: <Smartphone className="w-4 h-4" />, label: "Mobile" },
+  { href: "/revenue", icon: <BarChart3 className="w-4 h-4" />, label: "Revenue" },
 ];
 
 const Navbar = () => {

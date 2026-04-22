@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Archon MVP
 
-## Getting Started
+Archon is a monetized website-generation platform with:
+- free intake + generation preview,
+- paid production unlock via Stripe,
+- web + mobile (Android/iOS) availability via PWA,
+- conversion analytics and referral attribution.
 
-First, run the development server:
+## Product routes
+- `/` marketing + product narrative
+- `/intake` intent intake flow
+- `/dashboard` generated output and paid unlock entry
+- `/pricing` conversion and offer page
+- `/mobile` install + delivery page for Android/iOS
+- `/revenue` monetization console
 
+## API routes
+- `/api/ready` launch readiness (env + database checks)
+- `/api/stripe/webhook` Stripe payment completion handler
+- `/api/generation/package` paid-gated generation package contract
+
+## Run locally
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Build for production
+```bash
+npm run build
+npm start
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
+Create `.env` with:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+DATABASE_URL=file:./dev.db
+CLERK_SECRET_KEY=...
+STRIPE_SECRET_KEY=...
+STRIPE_WEBHOOK_SECRET=...
+# optional automation
+POST_PURCHASE_WEBHOOK_URL=
+```
 
-## Learn More
+## Launch readiness
+Run:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+curl http://localhost:3000/api/ready
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Expect `status: "ready"` before launch.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment notes
+- Deploy as a Next.js app (Vercel or Node host).
+- Configure Stripe webhook to `https://<your-domain>/api/stripe/webhook`.
+- Keep `NEXT_PUBLIC_APP_URL` set to production domain.
+- Validate paid access by calling `/api/generation/package` after checkout.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Detailed GTM checklist: `docs/GO_TO_MARKET_MVP.md`

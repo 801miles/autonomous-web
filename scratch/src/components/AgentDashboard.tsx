@@ -8,30 +8,40 @@ const agents = [
   {
     name: "Architect Dev",
     role: "Full-Stack Logic",
+    roleAction: "Synthesizing feature topology and execution sequencing",
     status: "executing",
     progress: 78,
     icon: <Code2 className="w-5 h-5 text-blue-400" />,
-    color: "blue",
+    panelAccentClass: "bg-blue-400/10",
+    progressClass: "from-blue-400 to-cyan-400",
   },
   {
     name: "Aura Designer",
     role: "Visual UI/UX",
+    roleAction: "Refining interaction hierarchy and readability contrast",
     status: "success",
     progress: 100,
     icon: <Palette className="w-5 h-5 text-purple-400" />,
-    color: "purple",
+    panelAccentClass: "bg-purple-400/10",
+    progressClass: "from-purple-400 to-fuchsia-400",
   },
   {
     name: "Nexus DevOps",
     role: "Cloud/Deployment",
+    roleAction: "Awaiting release window and infrastructure policy input",
     status: "idle",
     progress: 0,
     icon: <Globe className="w-5 h-5 text-emerald-400" />,
-    color: "emerald",
+    panelAccentClass: "bg-emerald-400/10",
+    progressClass: "from-emerald-400 to-teal-400",
   },
 ];
 
 const AgentDashboard = () => {
+  const activeAgents = agents.filter((agent) => agent.status === "executing").length;
+  const completedAgents = agents.filter((agent) => agent.status === "success").length;
+  const systemHealth = completedAgents === agents.length ? "Optimal" : "Stabilizing";
+
   return (
     <section className="py-20 px-6 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
@@ -46,10 +56,10 @@ const AgentDashboard = () => {
         </div>
         <div className="flex gap-4">
           <div className="glass px-4 py-2 rounded-xl text-sm font-medium">
-            Active Agents: <span className="text-primary font-bold">2</span>
+            Active Agents: <span className="text-primary font-bold">{activeAgents}</span>
           </div>
           <div className="glass px-4 py-2 rounded-xl text-sm font-medium">
-            System Health: <span className="text-emerald-400 font-bold">Optimal</span>
+            System Health: <span className="text-emerald-400 font-bold">{systemHealth}</span>
           </div>
         </div>
       </div>
@@ -68,7 +78,7 @@ const AgentDashboard = () => {
             <div className="glass p-6 rounded-3xl h-full flex flex-col justify-between">
               <div>
                 <div className="flex justify-between items-start mb-6">
-                  <div className={`p-3 bg-${agent.color}-400/10 rounded-2xl`}>
+                  <div className={`p-3 rounded-2xl ${agent.panelAccentClass}`}>
                     {agent.icon}
                   </div>
                   <div className="flex gap-1">
@@ -94,6 +104,9 @@ const AgentDashboard = () => {
                 <p className="text-sm text-foreground/40 mb-6 font-medium tracking-wide">
                   {agent.role}
                 </p>
+                <p className="text-xs text-foreground/35 mb-6">
+                  {agent.roleAction}
+                </p>
               </div>
 
               <div className="space-y-3">
@@ -108,7 +121,7 @@ const AgentDashboard = () => {
                     initial={{ width: 0 }}
                     animate={{ width: `${agent.progress}%` }}
                     transition={{ duration: 1.5, delay: 0.5 + index * 0.1, ease: "circOut" }}
-                    className={`h-full bg-gradient-to-r from-primary to-accent`}
+                    className={`h-full bg-gradient-to-r ${agent.progressClass}`}
                   />
                 </div>
               </div>

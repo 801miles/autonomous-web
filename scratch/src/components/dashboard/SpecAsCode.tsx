@@ -7,6 +7,7 @@ import { type TechSpec } from "@/lib/transmutation";
 import { cn } from "@/lib/utils";
 import { createCheckoutSession } from "@/actions/stripe";
 import { useRouter } from "next/navigation";
+import { toast } from "@/components/ui/Toast";
 
 interface SpecAsCodeProps {
   spec: TechSpec;
@@ -34,11 +35,22 @@ export const SpecAsCode = ({ spec }: SpecAsCodeProps) => {
   const [isExporting, setIsExporting] = useState(false);
   const router = useRouter();
 
-  const handleExport = async () => {
+  const handleExport = async (type: "github" | "zip") => {
     setIsExporting(true);
     try {
-      const { url } = await createCheckoutSession("archon_export");
+      const platform = /iphone|ipad|ipod/i.test(navigator.userAgent)
+        ? "ios"
+        : /android/i.test(navigator.userAgent)
+          ? "android"
+          : "web";
+      const { url } = await createCheckoutSession("archon_export", platform);
       if (url) {
+        toast({
+          variant: "info",
+          title: type === "github" ? "Preparing GitHub generation…" : "Preparing .ZIP generation…",
+          description: "Secure Stripe checkout is initializing your production package unlock.",
+          duration: 4000,
+        });
         if (url.startsWith("/")) {
           router.push(url);
         } else {
@@ -47,6 +59,11 @@ export const SpecAsCode = ({ spec }: SpecAsCodeProps) => {
       }
     } catch (error) {
       console.error("Export error:", error);
+      toast({
+        variant: "error",
+        title: "Export Failed",
+        description: "Could not initialize checkout. Please try again.",
+      });
     } finally {
       setIsExporting(false);
     }
@@ -56,6 +73,7 @@ export const SpecAsCode = ({ spec }: SpecAsCodeProps) => {
     const content = JSON.stringify(spec, null, 2);
     navigator.clipboard.writeText(content);
     setCopied(true);
+    toast({ variant: "success", title: "Spec copied to clipboard", duration: 2500 });
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -165,20 +183,20 @@ export const SpecAsCode = ({ spec }: SpecAsCodeProps) => {
       {/* Deployment Footer */}
       <div className="flex gap-3 px-5 py-4 border-t border-white/5 bg-white/2">
         <button 
-          onClick={handleExport}
+          onClick={() => handleExport("github")}
           disabled={isExporting}
           className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-foreground/5 hover:bg-foreground/10 transition-all text-xs font-bold border border-white/5 disabled:opacity-50"
         >
           {isExporting ? <Loader2 className="w-4 h-4 text-primary animate-spin" /> : <GitBranch className="w-4 h-4 text-primary" />}
-          Push to GitHub
+          Generate + Push to GitHub
         </button>
         <button 
-          onClick={handleExport}
+          onClick={() => handleExport("zip")}
           disabled={isExporting}
           className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary transition-all text-xs font-bold border border-primary/20 disabled:opacity-50"
         >
           {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-          Download .ZIP
+          Generate + Download .ZIP
         </button>
       </div>
     </div>

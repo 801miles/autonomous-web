@@ -11,12 +11,34 @@ datasource db {
   provider = "sqlite"
 }
 
+enum Plan {
+  FREE
+  PRO
+}
+
 model User {
-  id               String   @id @default(cuid())
-  clerkUserId      String   @unique
-  email            String   @unique
-  stripeCustomerId String?  @unique
-  hasPaidExport    Boolean  @default(false)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id                   String            @id @default(cuid())
+  clerkUserId          String            @unique
+  email                String            @unique
+  stripeCustomerId     String?           @unique
+  hasPaidExport        Boolean           @default(false)
+  plan                 Plan              @default(FREE)
+  generationCredits    Int               @default(0)
+  lifetimeRevenueCents Int               @default(0)
+  conversions          ConversionEvent[]
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+}
+
+model ConversionEvent {
+  id          String   @id @default(cuid())
+  userId      String
+  eventType   String
+  eventSource String?
+  metadata    String?
+  amountCents Int?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, eventType, createdAt])
 }

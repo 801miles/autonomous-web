@@ -7,6 +7,7 @@ import { PsychHeatmap } from "@/components/dashboard/PsychHeatmap";
 import { AgentConsensus } from "@/components/dashboard/AgentConsensus";
 import { SpecAsCode } from "@/components/dashboard/SpecAsCode";
 import { transmute, type TechSpec, type IntakeData } from "@/lib/transmutation";
+import { toast } from "@/components/ui/Toast";
 
 // Fallback demo spec for direct navigation (no intake session)
 const DEMO_INTAKE: IntakeData = {
@@ -38,7 +39,6 @@ export default function DashboardPage() {
         const parsed: TechSpec = JSON.parse(raw);
         setSpec(parsed);
         setSourceLabel("live");
-        // If arriving from intake transmutation flow, show brief orchestrating state
         const params = new URLSearchParams(window.location.search);
         if (params.get("status") === "orchestrating") {
           setIsOrchestrating(true);
@@ -48,6 +48,29 @@ export default function DashboardPage() {
       }
     } catch {
       // Malformed storage — fall back to demo spec silently
+    }
+  }, []);
+
+  // Handle Stripe redirect query params
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("export_success") === "true") {
+      toast({
+        variant: "success",
+        title: "Generation Package Unlocked! 🎉",
+        description: "Your production deliverables are now unlocked. Use the deploy buttons below.",
+        duration: 8000,
+      });
+      // Clean URL without hard reload
+      window.history.replaceState({}, "", "/dashboard");
+    } else if (params.get("export_cancelled") === "true") {
+      toast({
+        variant: "info",
+        title: "Checkout cancelled",
+        description: "No charge was made. Unlock production generation anytime for $29.",
+        duration: 6000,
+      });
+      window.history.replaceState({}, "", "/dashboard");
     }
   }, []);
 
