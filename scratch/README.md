@@ -66,10 +66,20 @@ Detailed GTM checklist: `docs/GO_TO_MARKET_MVP.md`
 
 ## Push secrets to Vercel (one run)
 
-From the monorepo root, after `npx vercel login` and with `scratch` linked:
+After `npx vercel login` and with the app linked (`.vercel` inside `scratch/`):
+
+**From the monorepo root** (folder that contains `scratch/`):
 
 ```powershell
-pwsh -File scratch/scripts/vercel-env-from-local.ps1
+powershell -ExecutionPolicy Bypass -File scratch\scripts\vercel-env-from-local.ps1
 ```
 
-Then redeploy: `cd scratch; npx vercel deploy --prod --yes`
+**From inside `scratch/`** (for example `C:\Users\hlim\.gemini\antigravity\scratch`):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\vercel-env-from-local.ps1
+```
+
+Use `powershell`, not `pwsh`, unless you have [PowerShell 7+](https://learn.microsoft.com/powershell/scripting/install/installing-powershell-on-windows) installed.
+
+Then redeploy: `npx vercel deploy --prod --yes`

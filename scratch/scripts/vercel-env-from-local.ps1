@@ -1,6 +1,12 @@
 # Push production secrets from your machine to the linked Vercel project.
-# Run from repo root:  pwsh -File scratch/scripts/vercel-env-from-local.ps1
-# Requires: Vercel CLI logged in (`npx vercel login`) and project linked (`scratch/.vercel`).
+#
+# From monorepo root (folder that contains `scratch/`):
+#   powershell -ExecutionPolicy Bypass -File scratch\scripts\vercel-env-from-local.ps1
+#
+# From inside `scratch/` (your case):
+#   powershell -ExecutionPolicy Bypass -File scripts\vercel-env-from-local.ps1
+#
+# Requires: Vercel CLI (`npx vercel login`) and this app linked (`.vercel` in `scratch/`).
 
 $ErrorActionPreference = "Stop"
 Set-Location (Join-Path $PSScriptRoot "..")
