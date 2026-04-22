@@ -43,26 +43,44 @@ export const SpecAsCode = ({ spec }: SpecAsCodeProps) => {
         : /android/i.test(navigator.userAgent)
           ? "android"
           : "web";
-      const { url } = await createCheckoutSession("archon_export", platform);
-      if (url) {
-        toast({
-          variant: "info",
-          title: type === "github" ? "Preparing GitHub generation…" : "Preparing .ZIP generation…",
-          description: "Secure Stripe checkout is initializing your production package unlock.",
-          duration: 4000,
-        });
-        if (url.startsWith("/")) {
-          router.push(url);
-        } else {
-          window.location.href = url;
+      const result = await createCheckoutSession("archon_export", platform, type);
+      if (!result.ok) {
+        if (result.message.toLowerCase().includes("sign in")) {
+          toast({
+            variant: "info",
+            title: "Sign in required",
+            description: result.message,
+            duration: 5000,
+          });
+          router.push("/sign-in");
+          return;
         }
+        toast({
+          variant: "error",
+          title: "Checkout unavailable",
+          description: result.message,
+          duration: 8000,
+        });
+        return;
+      }
+      const { url } = result;
+      toast({
+        variant: "info",
+        title: type === "github" ? "Opening checkout (GitHub delivery)" : "Opening checkout (.ZIP delivery)",
+        description: "After payment, assets unlock from your dashboard and API.",
+        duration: 4000,
+      });
+      if (url.startsWith("/")) {
+        router.push(url);
+      } else {
+        window.location.href = url;
       }
     } catch (error) {
       console.error("Export error:", error);
       toast({
         variant: "error",
         title: "Export Failed",
-        description: "Could not initialize checkout. Please try again.",
+        description: error instanceof Error ? error.message : "Could not start checkout. Please try again.",
       });
     } finally {
       setIsExporting(false);
@@ -180,23 +198,34 @@ export const SpecAsCode = ({ spec }: SpecAsCodeProps) => {
         </AnimatePresence>
       </div>
 
-      {/* Deployment Footer */}
+      {/* Paid unlock: both buttons start Stripe Checkout; delivery channel is recorded in session metadata. */}
+      <div className="px-5 pt-3 border-t border-white/5 bg-white/2">
+        <p className="text-[10px] text-foreground/35 font-mono mb-3 leading-relaxed">
+          $29 via Stripe. These buttons start checkout only; GitHub or ZIP handoff happens after payment (see `/api/generation/package`).
+        </p>
+      </div>
       <div className="flex gap-3 px-5 py-4 border-t border-white/5 bg-white/2">
-        <button 
+        <button
           onClick={() => handleExport("github")}
           disabled={isExporting}
-          className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-foreground/5 hover:bg-foreground/10 transition-all text-xs font-bold border border-white/5 disabled:opacity-50"
+          className="flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 rounded-xl bg-foreground/5 hover:bg-foreground/10 transition-all text-xs font-bold border border-white/5 disabled:opacity-50"
         >
-          {isExporting ? <Loader2 className="w-4 h-4 text-primary animate-spin" /> : <GitBranch className="w-4 h-4 text-primary" />}
-          Generate + Push to GitHub
+          <span className="flex items-center gap-2">
+            {isExporting ? <Loader2 className="w-4 h-4 text-primary animate-spin" /> : <GitBranch className="w-4 h-4 text-primary" />}
+            Pay $29 — GitHub path
+          </span>
+          <span className="text-[9px] font-normal text-foreground/40 font-mono normal-case tracking-normal">Checkout</span>
         </button>
-        <button 
+        <button
           onClick={() => handleExport("zip")}
           disabled={isExporting}
-          className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary transition-all text-xs font-bold border border-primary/20 disabled:opacity-50"
+          className="flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary transition-all text-xs font-bold border border-primary/20 disabled:opacity-50"
         >
-          {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-          Generate + Download .ZIP
+          <span className="flex items-center gap-2">
+            {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+            Pay $29 — .ZIP path
+          </span>
+          <span className="text-[9px] font-normal text-primary/60 font-mono normal-case tracking-normal">Checkout</span>
         </button>
       </div>
     </div>
