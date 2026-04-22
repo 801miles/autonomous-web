@@ -17,9 +17,17 @@ const NAV_LINKS = [
   { href: "/revenue", icon: <BarChart3 className="w-4 h-4" />, label: "Revenue" },
 ];
 
-const Navbar = () => {
-  const pathname = usePathname();
-  const { isLoaded, userId } = useAuth();
+function NavbarInner({
+  pathname,
+  showAuth,
+  isLoaded,
+  userId,
+}: {
+  pathname: string | null;
+  showAuth: boolean;
+  isLoaded: boolean;
+  userId: string | null | undefined;
+}) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -40,7 +48,6 @@ const Navbar = () => {
             </span>
           </Link>
 
-          {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-1">
             {NAV_LINKS.map((link) => (
               <NavLink
@@ -53,7 +60,6 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
             <Link
               href="https://github.com"
@@ -70,18 +76,17 @@ const Navbar = () => {
               <Zap className="w-4 h-4" />
               Begin Intake
             </Link>
-            
-            {isLoaded && !userId && (
+
+            {showAuth && isLoaded && !userId && (
               <Link href="/sign-in" className="flex items-center px-4 py-2 text-sm font-semibold hover:text-primary transition-colors">
                 Sign In
               </Link>
             )}
-            {isLoaded && userId && (
+            {showAuth && isLoaded && userId && (
               <UserButton appearance={{ elements: { userButtonAvatarBox: "w-9 h-9 border-2 border-primary/20" } }} />
             )}
           </div>
 
-          {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(true)}
             className="md:hidden p-2 hover:bg-white/10 rounded-xl transition-colors"
@@ -92,11 +97,9 @@ const Navbar = () => {
         </div>
       </motion.nav>
 
-      {/* Mobile Drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -105,7 +108,6 @@ const Navbar = () => {
               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
             />
 
-            {/* Drawer */}
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
@@ -113,7 +115,6 @@ const Navbar = () => {
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               className="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] glass-strong z-[70] flex flex-col"
             >
-              {/* Drawer header */}
               <div className="flex items-center justify-between px-6 py-5 border-b border-white/5">
                 <div className="flex items-center gap-2">
                   <Shield className="w-5 h-5 text-primary" />
@@ -128,7 +129,6 @@ const Navbar = () => {
                 </button>
               </div>
 
-              {/* Drawer links */}
               <div className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
                 {NAV_LINKS.map((link) => (
                   <Link
@@ -142,17 +142,14 @@ const Navbar = () => {
                         : "text-foreground/50 hover:text-foreground hover:bg-white/5"
                     )}
                   >
-                    <span className={cn(pathname === link.href ? "text-primary" : "")}>
-                      {link.icon}
-                    </span>
+                    <span className={cn(pathname === link.href ? "text-primary" : "")}>{link.icon}</span>
                     {link.label}
                   </Link>
                 ))}
               </div>
 
-              {/* Drawer footer */}
               <div className="px-4 py-6 border-t border-white/5 space-y-3">
-                {isLoaded && !userId && (
+                {showAuth && isLoaded && !userId && (
                   <>
                     <Link
                       href="/sign-in"
@@ -170,7 +167,7 @@ const Navbar = () => {
                     </Link>
                   </>
                 )}
-                {isLoaded && userId && (
+                {showAuth && isLoaded && userId && (
                   <div className="flex items-center gap-3 px-4 py-3">
                     <UserButton appearance={{ elements: { userButtonAvatarBox: "w-10 h-10 border-2 border-primary/20" } }} />
                     <span className="text-sm text-foreground/50">Account</span>
@@ -191,7 +188,7 @@ const Navbar = () => {
       </AnimatePresence>
     </>
   );
-};
+}
 
 const NavLink = ({
   href,
@@ -208,14 +205,10 @@ const NavLink = ({
     href={href}
     className={cn(
       "relative flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all",
-      active
-        ? "text-foreground bg-white/8"
-        : "text-foreground/50 hover:text-foreground hover:bg-white/5"
+      active ? "text-foreground bg-white/8" : "text-foreground/50 hover:text-foreground hover:bg-white/5"
     )}
   >
-    <span className={cn("transition-colors", active ? "text-primary" : "group-hover:text-primary")}>
-      {icon}
-    </span>
+    <span className={cn("transition-colors", active ? "text-primary" : "group-hover:text-primary")}>{icon}</span>
     {label}
     {active && (
       <motion.div
@@ -227,4 +220,14 @@ const NavLink = ({
   </Link>
 );
 
-export default Navbar;
+export default function Navbar() {
+  const pathname = usePathname();
+  const { isLoaded, userId } = useAuth();
+  return <NavbarInner pathname={pathname} showAuth isLoaded={isLoaded} userId={userId} />;
+}
+
+/** Navbar when Clerk is not configured (no useAuth — safe outside ClerkProvider). */
+export function NavbarGuest() {
+  const pathname = usePathname();
+  return <NavbarInner pathname={pathname} showAuth={false} isLoaded userId={null} />;
+}

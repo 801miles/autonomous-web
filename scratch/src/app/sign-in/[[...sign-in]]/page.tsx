@@ -1,6 +1,7 @@
 import { SignIn } from "@clerk/nextjs";
 import { Shield } from "lucide-react";
 import type { Metadata } from "next";
+import { isClerkConfigured } from "@/lib/clerk-env";
 
 export const metadata: Metadata = {
   title: "Sign In",
@@ -8,6 +9,25 @@ export const metadata: Metadata = {
 };
 
 export default function SignInPage() {
+  if (!isClerkConfigured()) {
+    return (
+      <div className="relative flex min-h-screen w-full items-center justify-center px-6 py-32">
+        <div className="max-w-md text-center space-y-4 glass rounded-2xl p-10 border border-white/10">
+          <Shield className="w-10 h-10 text-primary mx-auto" />
+          <h1 className="text-xl font-bold">Sign-in is not available yet</h1>
+          <p className="text-sm text-foreground/50">
+            Clerk environment variables are not set on this deployment. Add{" "}
+            <code className="text-xs text-foreground/70">NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY</code> and{" "}
+            <code className="text-xs text-foreground/70">CLERK_SECRET_KEY</code> in the project environment, then redeploy.
+          </p>
+          <a href="/" className="inline-block text-sm font-semibold text-primary hover:underline">
+            Back to home
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center px-6 py-32">
       {/* Background orbs */}

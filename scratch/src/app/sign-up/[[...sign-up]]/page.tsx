@@ -1,6 +1,7 @@
 import { SignUp } from "@clerk/nextjs";
 import { Zap } from "lucide-react";
 import type { Metadata } from "next";
+import { isClerkConfigured } from "@/lib/clerk-env";
 
 export const metadata: Metadata = {
   title: "Get Started",
@@ -8,6 +9,23 @@ export const metadata: Metadata = {
 };
 
 export default function SignUpPage() {
+  if (!isClerkConfigured()) {
+    return (
+      <div className="relative flex min-h-screen w-full items-center justify-center px-6 py-32">
+        <div className="max-w-md text-center space-y-4 glass rounded-2xl p-10 border border-white/10">
+          <Zap className="w-10 h-10 text-primary mx-auto" />
+          <h1 className="text-xl font-bold">Sign-up is not available yet</h1>
+          <p className="text-sm text-foreground/50">
+            Clerk environment variables are not set on this deployment. Configure Clerk keys on Vercel and redeploy to enable accounts.
+          </p>
+          <a href="/" className="inline-block text-sm font-semibold text-primary hover:underline">
+            Back to home
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center px-6 py-32">
       {/* Background orbs */}
