@@ -1,0 +1,11 @@
+# verification Plan
+- [x] Visit Home page (http://localhost:3000)
+- [x] Screenshot Home page
+- [x] Check console on Home page
+- [x] Visit Intake page (http://localhost:3000/intake)
+- [x] Screenshot Intake page
+- [x] Check console on Intake page
+- [x] Visit Dashboard page (http://localhost:3000/dashboard)
+- [x] Screenshot Dashboard page
+- [x] Check console on Dashboard page
+- [x] Summarize findings and visual/console errors.

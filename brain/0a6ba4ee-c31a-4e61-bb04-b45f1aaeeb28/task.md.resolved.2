@@ -1,0 +1,19 @@
+# Execution Plan: Archon PWA & Rebrand
+
+- [x] Rebrand "AAO" to "Archon"
+  - `src/app/layout.tsx` (metadata, footer)
+  - `src/components/layout/Navbar.tsx` (brand logo)
+  - `src/components/Hero.tsx` (hero text)
+  - `src/app/intake/page.tsx` (metadata)
+- [x] Create PWA Service Worker & Manifest
+  - `public/sw.js` (network-first strategy)
+  - `public/manifest.json` (standalone, theme_color, pointing to icon.svg)
+- [x] Create App Icons
+  - `public/icon.svg` (base vector graphics for Android/Chrome manifest)
+  - `src/app/icon.tsx` (dynamic standard icon)
+  - `src/app/apple-icon.tsx` (dynamic iOS icon using ImageResponse)
+- [x] Setup PWA Registry & layout metadata
+  - `src/components/PwaRegistry.tsx` (useEffect SW registration)
+  - `src/app/layout.tsx` (inject registry, add `viewport` export)
+- [x] Verify
+  - Run `npm run build`

@@ -1,0 +1,72 @@
+{
+  "project_metadata": {
+    "goal": "Antigravity Architect Orchestrator (AAO) — transmute minimal user intent into exhaustive, production-grade technical specifications via psychographically-informed multi-agent orchestration.",
+    "tech_stack": ["Next.js 16", "React 19", "TypeScript 5", "Tailwind CSS v4", "Framer Motion 12", "GSAP 3", "lucide-react", "clsx", "tailwind-merge"],
+    "entry_point": "scratch/src/app/page.tsx",
+    "project_root": "C:/Users/hlim/.gemini/antigravity/scratch"
+  },
+  "current_state": {
+    "last_completed_task": "Phase 8 Complete — Full autonomous build. All 11 gaps resolved. Clean production build (exit 0). All 3 routes visually verified.",
+    "known_utilities": [
+      "scratch/src/lib/rft-scorer.ts — RFT lexicon, bi-directional promotion/prevention float score (-1.0 to +1.0)",
+      "scratch/src/lib/signal-strength.ts — Shannon Entropy + Entity regex + Sentiment Intensity math (S = 0.40·H + 0.35·E + 0.25·I)",
+      "scratch/src/lib/dissonance-linter.ts — Phrase clash detection, 3-tier severity (passive/semi-active/active)",
+      "scratch/src/lib/transmutation.ts — Expands 5 answers into TechSpec; ComponentDirective now includes gainBias/fearBias fields; 6 components in deriveAtomicMap",
+      "scratch/src/lib/utils.ts — Generic utility helpers (clsx/cn pattern)",
+      "scratch/src/components/intake/SignalMeter.tsx — Real-time signal score visualizer",
+      "scratch/src/components/intake/RftSlider.tsx — Bi-directional RFT spectrum slider with NLP Auto/Manual Lock",
+      "scratch/src/components/intake/IntakeForm.tsx — Multi-step intake form; sessionStorage→dashboard bridge producer (single transmute() call)",
+      "scratch/src/components/psych/DissonanceLinter.tsx — Annotated text renderer with animated tooltips",
+      "scratch/src/components/psych/PreflightModal.tsx — High-dissonance intervention modal",
+      "scratch/src/components/dashboard/PsychHeatmap.tsx — Live componentMap-driven Gain/Fear heatmap (no longer hardcoded)",
+      "scratch/src/components/dashboard/AgentConsensus.tsx — Terminal-style streaming agent debate log with Replay",
+      "scratch/src/components/dashboard/SpecAsCode.tsx — 4-panel spec viewer (Spec/Debug/Atoms/CSS) with Copy JSON, GitHub, Vercel actions",
+      "scratch/src/components/dashboard/SpecificationPreview.tsx — Spec preview panel (available for future use)",
+      "scratch/src/components/layout/Navbar.tsx — usePathname active route highlighting, Framer Motion layoutId pill, AAA→AAO brand rename",
+      "scratch/src/components/Hero.tsx — Fully wired CTAs (Link), animated live signal matrix + streaming agent log preview, stats row, no placeholders",
+      "scratch/src/components/AgentDashboard.tsx — Legacy 3-agent status section on home page",
+      "scratch/src/components/Terminal.tsx — Animated terminal log section on home page"
+    ],
+    "active_dependencies": [
+      "next@16.2.3", "react@19.2.4", "framer-motion@12.38.0", "gsap@3.14.2",
+      "lucide-react@1.8.0", "clsx@2.1.1", "tailwind-merge@3.5.0", "tailwindcss@4"
+    ],
+    "routes": [
+      "/  → Home: Hero (animated signal matrix, wired CTAs) + AgentDashboard + Terminal",
+      "/intake → Deep Intent Extraction: 5 Golden Questions + SignalMeter + RftSlider + Dissonance gating",
+      "/dashboard → Orchestration: PsychHeatmap (live) + AgentConsensus + SpecAsCode (4 panels), Demo/Live mode badge, New Intake reset"
+    ],
+    "data_flow": {
+      "intake→dashboard": "IntakeForm.handleTransmute() → single transmute(data) call → sessionStorage('aao_spec') → /dashboard?status=orchestrating → OrchestratingOverlay (2.2s) → live spec renders",
+      "dashboard→intake_reset": "handleNewIntake() → sessionStorage.removeItem('aao_spec') → window.location='/intake'"
+    }
+  },
+  "technical_debt": [],
+  "last_sync": "2026-04-14T12:26:00Z",
+  "last_build": {
+    "status": "clean",
+    "exit_code": 0,
+    "routes": ["/", "/_not-found", "/intake", "/dashboard"],
+    "ts_errors": 0,
+    "timestamp": "2026-04-14T12:23:00Z"
+  },
+  "gaps_resolved_phase_8": [
+    "Hero CTA buttons wired (dead button→Link)",
+    "Hero preview replaces Box placeholder with animated signal matrix",
+    "Navbar brand AAA→AAO",
+    "Navbar active route indicator (usePathname + Framer Motion layoutId)",
+    "Dashboard Demo Mode amber badge added",
+    "Dashboard New Intake / Start Intake reset button added",
+    "PsychHeatmap wired to live spec.componentMap (was hardcoded)",
+    "ComponentDirective extended with gainBias/fearBias fields",
+    "deriveAtomicMap extended with SocialProofGrid (6 components)",
+    "globals.css: scrollbar-hide utility added + glass-strong + neon-glow-cyan",
+    "Metadata: AAA→AAO, template title, per-page titles for /intake",
+    "Unused Loader2 import removed from dashboard/page.tsx"
+  ],
+  "conversation_lineage": [
+    "063941c3-e2b9-4866-961b-e68b4f83fc05 (Phase 8 — complete autonomous build, current)",
+    "b4f80db4-35cb-4ab2-b24f-710eea319f1b (AAO v2 Full Build)",
+    "704958a7-c1ad-47f0-b163-a576e7523dbf (Bayesian sync)"
+  ]
+}

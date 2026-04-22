@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="128" fill="#0a0a0a"/>
+  <!-- Abstract geometric chevron / arch reflecting Archon -->
+  <path d="M256 120 L110 390 H175 L256 210 L337 390 H402 Z" fill="#22d3ee" />
+  <path d="M256 170 L212 280 H300 Z" fill="#0a0a0a" />
+</svg>
