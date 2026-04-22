@@ -1,0 +1,39 @@
+# Phase 10: Ship to Market — Full Cross-Functional Execution
+
+## Critical Infrastructure (CTO + Security) - COMPLETED
+- [x] Fix ClerkProvider HTML structure (wraps `<html>` illegally)
+- [x] Add middleware deprecation TODO tracking comment
+- [x] Add global error boundary (`error.tsx` + `not-found.tsx`)
+- [x] Sanitize Prisma singleton (prevent connection leaks)
+
+## Mobile & Responsive (UX Designer + QA)
+- [ ] Build mobile navigation drawer (hamburger menu is dead)
+- [ ] Verify all pages responsive at 375px, 768px, 1024px, 1440px
+
+## Conversion Funnel (Product Manager + Marketing)
+- [ ] Create `/pricing` page with feature comparison (Free vs Premium)
+- [ ] Add export success/cancel toast on dashboard
+- [ ] Refine Hero copy for conversion optimization
+- [ ] Wire footer with real navigation links
+
+## Legal Compliance (Legal + Security)
+- [ ] Create `/privacy` page (Privacy Policy)
+- [ ] Create `/terms` page (Terms of Service)
+- [ ] Add footer links to legal pages
+
+## Brand & Polish (UX Designer)
+- [ ] Polish sign-in/sign-up pages (Midnight Luxe consistency)
+- [ ] Add page transition animations
+- [ ] Create custom 404 page matching brand
+- [ ] Enhance PWA icons (192px + 512px)
+
+## SEO & Discoverability (Marketing)
+- [ ] Add OpenGraph image generation
+- [ ] Add structured data (JSON-LD)
+- [ ] Per-page meta descriptions for /intake, /dashboard, /pricing
+- [ ] Robots.txt + sitemap
+
+## Final Verification (QA + DevOps)
+- [ ] Clean production build (exit 0)
+- [ ] Visual verification of all routes via browser
+- [ ] Mobile responsiveness spot-check

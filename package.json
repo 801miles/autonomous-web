@@ -1,8 +1,0 @@
-{
-  "name": "autonomous-web-monorepo",
-  "private": true,
-  "description": "Repo root for Vercel: the Next.js app and dependencies live in scratch/. Root lists next so Vercel can detect the framework when Root Directory is the repository root (see vercel.json install/build commands).",
-  "dependencies": {
-    "next": "16.2.3"
-  }
-}
