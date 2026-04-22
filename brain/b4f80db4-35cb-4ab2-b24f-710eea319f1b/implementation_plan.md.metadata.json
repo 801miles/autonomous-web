@@ -1,7 +1,0 @@
-{
-  "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
-  "summary": "Full architectural rebuild plan for the AAO platform covering all 4 modules: Intake Matrix, Psychological Core, Transmutation Engine, and Dashboard Ecosystem.",
-  "updatedAt": "2026-04-09T16:22:26.786866900Z",
-  "version": "1",
-  "requestFeedback": true
-}
