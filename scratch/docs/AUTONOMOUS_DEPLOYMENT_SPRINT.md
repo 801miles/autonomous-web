@@ -11,10 +11,10 @@ Expected format:
 `postgresql://postgres:<PASSWORD>@<HOST>:6543/postgres?pgbouncer=true&connection_limit=1`
 
 ## 2) Vercel project
-- Import GitHub repo.
-- Set root directory to `scratch`.
-- Build command: `npm run build`
-- Install command: `npm install`
+- GitHub repo is connected for automatic deployments.
+- Monorepo builds use the root `vercel.json` in this repository, which runs install/build inside `scratch/`.
+- Production alias example: `https://scratch-two-sigma.vercel.app`
+- Inspect deployments: Vercel dashboard for project `scratch`.
 
 ## 3) Production environment variables
 - `NEXT_PUBLIC_APP_URL`
