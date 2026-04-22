@@ -14,7 +14,7 @@ const REQUIRED_ENV = [
 export async function GET() {
   const envStatus = REQUIRED_ENV.map((key) => ({
     key,
-    configured: Boolean(process.env[key]),
+    configured: Boolean(process.env[key]?.trim()),
   }));
 
   const missing = envStatus.filter((entry) => !entry.configured).map((entry) => entry.key);
