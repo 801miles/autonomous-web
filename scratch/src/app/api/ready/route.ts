@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 
 const REQUIRED_ENV = [
   "NEXT_PUBLIC_APP_URL",
+  "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
   "DATABASE_URL",
   "CLERK_SECRET_KEY",
   "STRIPE_SECRET_KEY",

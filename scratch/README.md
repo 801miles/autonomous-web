@@ -36,6 +36,7 @@ Create `.env` with:
 
 ```bash
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=...
 DATABASE_URL=postgresql://postgres:<PASSWORD>@<HOST>:6543/postgres?pgbouncer=true&connection_limit=1
 CLERK_SECRET_KEY=...
 STRIPE_SECRET_KEY=...
@@ -62,3 +63,13 @@ Expect `status: "ready"` before launch.
 - Run `npm run db:push` from CI/release pipeline after env setup.
 
 Detailed GTM checklist: `docs/GO_TO_MARKET_MVP.md`
+
+## Push secrets to Vercel (one run)
+
+From the monorepo root, after `npx vercel login` and with `scratch` linked:
+
+```powershell
+pwsh -File scratch/scripts/vercel-env-from-local.ps1
+```
+
+Then redeploy: `cd scratch; npx vercel deploy --prod --yes`
