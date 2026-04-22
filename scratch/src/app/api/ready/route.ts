@@ -17,15 +17,21 @@ export async function GET() {
   }));
 
   const missing = envStatus.filter((entry) => !entry.configured).map((entry) => entry.key);
+  const databaseUrl = process.env.DATABASE_URL ?? "";
+  const postgresUrl = databaseUrl.startsWith("postgres://") || databaseUrl.startsWith("postgresql://");
   let dbOk = false;
   let dbError: string | null = null;
 
-  try {
-    const { prisma } = await import("@/lib/db");
-    await prisma.$queryRaw`SELECT 1`;
-    dbOk = true;
-  } catch (error) {
-    dbError = error instanceof Error ? error.message : "Unknown database error";
+  if (!postgresUrl) {
+    dbError = "DATABASE_URL must use postgres/postgresql scheme for Supabase production.";
+  } else {
+    try {
+      const { prisma } = await import("@/lib/db");
+      await prisma.$queryRaw`SELECT 1`;
+      dbOk = true;
+    } catch (error) {
+      dbError = error instanceof Error ? error.message : "Unknown database error";
+    }
   }
 
   const ready = missing.length === 0 && dbOk;
@@ -35,7 +41,7 @@ export async function GET() {
       ready,
       checks: {
         env: envStatus,
-        database: { ok: dbOk, error: dbError },
+        database: { ok: dbOk, usesPostgresUrl: postgresUrl, error: dbError },
       },
       targetPlatforms: ["web", "android", "ios"],
       timestamp: new Date().toISOString(),

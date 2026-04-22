@@ -36,7 +36,7 @@ Create `.env` with:
 
 ```bash
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-DATABASE_URL=file:./dev.db
+DATABASE_URL=postgresql://postgres:<PASSWORD>@<HOST>:6543/postgres?pgbouncer=true&connection_limit=1
 CLERK_SECRET_KEY=...
 STRIPE_SECRET_KEY=...
 STRIPE_WEBHOOK_SECRET=...
@@ -55,8 +55,10 @@ Expect `status: "ready"` before launch.
 
 ## Deployment notes
 - Deploy as a Next.js app (Vercel or Node host).
+- For Supabase, use pooled Postgres URL in `DATABASE_URL`.
 - Configure Stripe webhook to `https://<your-domain>/api/stripe/webhook`.
 - Keep `NEXT_PUBLIC_APP_URL` set to production domain.
 - Validate paid access by calling `/api/generation/package` after checkout.
+- Run `npm run db:push` from CI/release pipeline after env setup.
 
 Detailed GTM checklist: `docs/GO_TO_MARKET_MVP.md`
